@@ -87,10 +87,12 @@
     </div>
 </div>
 
+https://free-website-templates.on-fleek.app/templates/Bold-Portfolio.zip
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 const templateItems = [
-    { name: "Modern Bold Portfolio", image: "templates/Bold-Portfolio.png", description: "A sleek and responsive Bold-Portfolio template", downloadLink: "data:application/zip;base64,aHR0cHM6Ly9mcmVlLXdlYnNpdGUtdGVtcGxhdGVzLm9uLWZsZWVrLmFwcC90ZW1wbGF0ZXMvQm9sZC1Qb3J0Zm9saW8uemlw" },
+    { name: "Modern Bold Portfolio", image: "templates/Bold-Portfolio.png", description: "A sleek and responsive Bold-Portfolio template", downloadLink: "https://free-website-templates.on-fleek.app/templates/Bold-Portfolio.zip" },
     { name: "Cannabis Club Html Template", image: "templates/Hanf-Freunde e.V. - Cannabis Sozialverein.png", description: "Professional and clean Cannabis Club website template" },
     { name: "Travel Blog", image: "templates/free-travel-blog-template.png", description: "Inspiring travel blog template" },
 ];
@@ -152,35 +154,13 @@ document.getElementById('verifyCaptcha').addEventListener('click', () => {
     if (userInput === captchaText) {
         const downloadLink = document.getElementById('verifyCaptcha').dataset.downloadLink;
         if (downloadLink) {
-            // Split the data URL to get the base64 part
-            const base64Data = downloadLink.split(',')[1];
-            // Decode the base64 data
-            const binaryData = atob(base64Data);
-            // Create an array buffer from the binary data
-            const arrayBuffer = new ArrayBuffer(binaryData.length);
-            const uint8Array = new Uint8Array(arrayBuffer);
-            for (let i = 0; i < binaryData.length; i++) {
-                uint8Array[i] = binaryData.charCodeAt(i);
-            }
-            // Create a Blob from the array buffer
-            const blob = new Blob([arrayBuffer], {type: 'application/zip'});
-            // Create a URL for the Blob
-            const url = URL.createObjectURL(blob);
-            
-            // Extract the filename from the decoded URL
-            const decodedLink = atob(base64Data);
-            const filename = decodedLink.split('/').pop();
-            
             // Create and click a download link
             const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
+            link.href = downloadLink;
+            link.download = downloadLink.split('/').pop(); // Extract filename from URL
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
-            // Clean up the object URL
-            URL.revokeObjectURL(url);
         } else {
             alert('Download link not available for this template.');
         }

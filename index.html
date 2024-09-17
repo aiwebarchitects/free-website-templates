@@ -3,7 +3,7 @@
 <meta name="keywords" content="free website templates, HTML5 templates, CSS3 templates, responsive design, web development">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link href="css/styles.css" rel="stylesheet">
+<link href="https://free-website-templates.on-fleek.app/css/styles.css" rel="stylesheet">
 </head>
 <body>
 <header id="siteHeader">
@@ -152,17 +152,35 @@ document.getElementById('verifyCaptcha').addEventListener('click', () => {
     if (userInput === captchaText) {
         const downloadLink = document.getElementById('verifyCaptcha').dataset.downloadLink;
         if (downloadLink) {
-            // Decode the base64 URL
-            const decodedLink = atob(downloadLink.split(',')[1]);
+            // Split the data URL to get the base64 part
+            const base64Data = downloadLink.split(',')[1];
+            // Decode the base64 data
+            const binaryData = atob(base64Data);
+            // Create an array buffer from the binary data
+            const arrayBuffer = new ArrayBuffer(binaryData.length);
+            const uint8Array = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < binaryData.length; i++) {
+                uint8Array[i] = binaryData.charCodeAt(i);
+            }
+            // Create a Blob from the array buffer
+            const blob = new Blob([arrayBuffer], {type: 'application/zip'});
+            // Create a URL for the Blob
+            const url = URL.createObjectURL(blob);
+            
             // Extract the filename from the decoded URL
+            const decodedLink = atob(base64Data);
             const filename = decodedLink.split('/').pop();
             
+            // Create and click a download link
             const link = document.createElement('a');
-            link.href = downloadLink;
-            link.download = filename;  // Use the extracted filename
+            link.href = url;
+            link.download = filename;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            // Clean up the object URL
+            URL.revokeObjectURL(url);
         } else {
             alert('Download link not available for this template.');
         }
